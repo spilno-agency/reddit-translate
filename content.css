@@ -1,0 +1,68 @@
+.rt-bar { margin-top: 4px; }
+.rt-bar:empty { display: none; }
+/* Button inside Reddit's Reply / Share row */
+.rt-row-btn.rt-btn, .rt-row-btn .rt-btn { width: 32px; height: 32px; align-self: center; }
+li.rt-row-btn { display: inline-block; vertical-align: middle; }
+li.rt-row-btn .rt-btn { width: 22px; height: 22px; }
+
+.rt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  opacity: 0.65;
+  cursor: pointer;
+}
+.rt-btn:hover, .rt-btn:focus-visible { opacity: 1; background: rgba(127, 127, 127, 0.18); }
+.rt-btn.rt-active { opacity: 1; color: #0a66c2; }
+.rt-btn.rt-loading svg { animation: rt-pulse 0.9s ease-in-out infinite; }
+@keyframes rt-pulse { 50% { opacity: 0.25; } }
+
+.rt-panel {
+  margin-top: 4px;
+  padding: 8px 12px;
+  border-left: 3px solid #0a66c2;
+  border-radius: 6px;
+  background: rgba(10, 102, 194, 0.08);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.rt-panel.rt-error { border-left-color: #d93a00; background: rgba(217, 58, 0, 0.08); }
+.rt-meta { font-size: 12px; opacity: 0.7; margin-bottom: 4px; }
+.rt-meta:empty { display: none; }
+.rt-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.rt-float {
+  position: absolute;
+  z-index: 2147483646;
+  opacity: 1;
+  background: #0a66c2;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.rt-float:hover { background: #084f96; }
+
+.rt-popover {
+  position: absolute;
+  z-index: 2147483647;
+  width: min(400px, calc(100vw - 16px));
+  max-height: 50vh;
+  overflow: auto;
+  padding: 6px 36px 6px 6px;
+  border-radius: 10px;
+  background: #fff;
+  color: #1a1a1b;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+.rt-popover .rt-panel { margin-top: 0; }
+.rt-close { position: absolute; top: 4px; right: 4px; }
+@media (prefers-color-scheme: dark) {
+  .rt-popover { background: #1a1a1b; color: #d7dadc; }
+}
+

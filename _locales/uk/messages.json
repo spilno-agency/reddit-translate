@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "Reddit Translate"
+  },
+  "extDescription": {
+    "message": "Переклад постів, коментарів і чату Reddit та відповіді мовою співрозмовника."
+  },
+  "actionTitle": {
+    "message": "Reddit Translate — налаштування"
+  }
+}

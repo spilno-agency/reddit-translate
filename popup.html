@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reddit Translate</title>
+  <style>
+    :root {
+      --bg: #f6f7fb; --card: #ffffff; --text: #14161c; --muted: #646b7a; --line: #e6e8ef;
+      --accent: #2563eb; --accent-2: #7c3aed; --accent-soft: #e8efff; --ok: #16a34a;
+      --switch-off: #cfd4de; --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115; --card: #171a21; --text: #eceef3; --muted: #9aa1ae; --line: #262a33;
+        --accent: #5b8cff; --accent-2: #a78bfa; --accent-soft: #1c2640; --ok: #4ade80;
+        --switch-off: #3a3f4b; --shadow: none;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { width: 340px; margin: 0; background: var(--bg); color: var(--text); font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+    header { display: flex; align-items: center; gap: 10px; padding: 10px 16px 8px; }
+    .logo { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 4px 12px rgba(37, 99, 235, .35); }
+    .title { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+    .subtitle { color: var(--muted); font-size: 11.5px; }
+
+    main { padding: 0 12px 10px; display: grid; gap: 8px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+    .section-title { padding: 8px 14px 0; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+    .hero { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: linear-gradient(135deg, var(--accent-soft), transparent 70%), var(--card); }
+    .hero .text b { display: block; font-size: 14px; }
+    .hero .text span { color: var(--muted); font-size: 12px; }
+
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px; border-top: 1px solid var(--line); cursor: pointer; }
+    .section-title + .row { border-top: none; }
+    .row .label { display: grid; gap: 0; justify-items: start; }
+    .row .label small { color: var(--muted); font-size: 11.5px; }
+
+    /* Switch */
+    .switch { appearance: none; flex: none; width: 36px; height: 21px; margin: 0; border-radius: 999px; background: var(--switch-off);
+      position: relative; cursor: pointer; transition: background .18s; }
+    .switch::after { content: ""; position: absolute; top: 2.5px; left: 2.5px; width: 16px; height: 16px; border-radius: 50%; background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .25); transition: transform .18s; }
+    .switch:checked { background: var(--accent); }
+    .switch:checked::after { transform: translateX(15px); }
+    .switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    select { flex: none; max-width: 132px; padding: 6px 26px 6px 10px; border: 1px solid var(--line); border-radius: 9px; color: var(--text); font: inherit;
+      background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center;
+      appearance: none; cursor: pointer; }
+    select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+    .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 600; }
+    .hint { color: var(--muted); font-size: 11.5px; padding: 0 14px 8px; }
+    kbd { font: 600 10.5px/1 system-ui, sans-serif; padding: 2px 5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; background: var(--bg); }
+
+    footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 16px 10px; color: var(--muted); font-size: 11.5px; }
+    .engine { display: inline-flex; align-items: center; gap: 6px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+    .icon-btn { display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 1px solid var(--line); border-radius: 9px;
+      background: var(--card); color: var(--muted); cursor: pointer; }
+    .icon-btn:hover { color: var(--text); }
+
+    .lang-switch { margin-left: auto; display: inline-flex; padding: 2px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
+    .lang-switch button { padding: 3px 9px; border: none; border-radius: 999px; background: transparent; color: var(--muted); font: 700 11px/1.4 inherit; letter-spacing: .03em; cursor: pointer; }
+    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+    .lang-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+    .toast { position: fixed; left: 50%; bottom: 12px; transform: translate(-50%, 20px); opacity: 0; padding: 7px 12px; border-radius: 999px;
+      background: var(--text); color: var(--bg); font-size: 12px; font-weight: 600; transition: all .2s; pointer-events: none; white-space: nowrap; }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+    </div>
+    <div>
+      <div class="title">Reddit Translate</div>
+      <div class="subtitle" id="version"></div>
+    </div>
+    <div class="lang-switch" role="group" id="uiLang" data-i18n-aria="popup.uiLang">
+      <button type="button" data-lang="uk" title="Українська">УКР</button>
+      <button type="button" data-lang="en" title="English">ENG</button>
+    </div>
+  </header>
+
+  <main>
+    <label class="card hero">
+      <div class="text" style="flex:1">
+        <b data-i18n="popup.autoTitle"></b>
+        <span data-i18n="popup.autoHint"></span>
+      </div>
+      <input class="switch" type="checkbox" role="switch" id="autoTranslate">
+    </label>
+
+    <section class="card" aria-labelledby="read-title">
+      <div class="section-title" id="read-title" data-i18n="popup.reading"></div>
+      <label class="row">
+        <span class="label"><span data-i18n="popup.targetLang"></span><small data-i18n="popup.targetLangHint"></small></span>
+        <select id="targetLang"></select>
+      </label>
+      <label class="row">
+        <span class="label"><span data-i18n="popup.showButtons"></span><small data-i18n="popup.showButtonsHint"></small></span>
+        <input class="switch" type="checkbox" role="switch" id="showButtons">
+      </label>
+      <label class="row">
+        <span class="label"><span data-i18n="popup.selection"></span><small data-i18n="popup.selectionHint"></small></span>
+        <input class="switch" type="checkbox" role="switch" id="selectionTranslate">
+      </label>
+      <label class="row">
+        <span class="label"><span data-i18n="popup.chat"></span><small data-i18n="popup.chatHint"></small></span>
+        <input class="switch" type="checkbox" role="switch" id="chatTranslate">
+      </label>
+    </section>
+
+    <section class="card" aria-labelledby="reply-title">
+      <div class="section-title" id="reply-title" data-i18n="popup.replies"></div>
+      <label class="row">
+        <span class="label"><span><span data-i18n="popup.replyButton"></span> <span class="chip">文A EN ➤</span></span><small data-i18n="popup.replyButtonHint"></small></span>
+        <input class="switch" type="checkbox" role="switch" id="replyTranslate">
+      </label>
+      <label class="row">
+        <span class="label"><span data-i18n="popup.replyLang"></span><small data-i18n="popup.replyLangHint"></small></span>
+        <select id="replyLang"></select>
+      </label>
+      <div class="hint"><kbd>⌘</kbd> <kbd>Shift</kbd> <kbd>Enter</kbd> <span data-i18n="popup.shortcut"></span></div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="engine" id="engine"><span class="dot"></span><span id="engine-text"></span></span>
+    <button class="icon-btn" id="diag" type="button" data-i18n-title="popup.diagTitle" data-i18n-aria="popup.diag">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="i18n.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
